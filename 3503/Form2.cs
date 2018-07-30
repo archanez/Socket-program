@@ -104,6 +104,10 @@ namespace _3503
 
         public void start(string host, int port, int backlog)
         {
+
+            chattingList.Items.Add("참여자를 기다리는 중입니다.");
+
+
             this.listen_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             IPAddress address;
             if (host == "0.0.0.0")
@@ -121,7 +125,7 @@ namespace _3503
                 listen_socket.Bind(endpoint);
                 listen_socket.Listen(backlog);
 
-                listen_thread = new Thread(Listen);
+                listen_thread = new Thread(WaitSocket);
                 listen_thread.Start();
 
             }
@@ -132,7 +136,7 @@ namespace _3503
             //c++하셨다면 try / catch 구문이야 잘 아시겠죠 전 잘모름.
         }
 
-        void Listen()
+        void WaitSocket()
         {
             while (true)
             {
@@ -150,12 +154,13 @@ namespace _3503
                 SendMessage("[" + client_address + "] 님이 참여하셨습니다.");
 
                 isConnected = true;
-                Thread receive_thread = new Thread(delegate(){
+                Thread receive_thread = new Thread(delegate()
+                {
                     do_receive(client_socket);
                 });
                 receive_threads.Add(receive_thread);
 
- //이 줄과 밑에 줄은 쓰레드입니다. 즉
+                //이 줄과 밑에 줄은 쓰레드입니다. 즉
                 //글자를 받는 것이라고 보시면 되겠습니다. 클라이언트로부터.
                 receive_thread.Start();
             }
@@ -197,11 +202,27 @@ namespace _3503
         {
             if (receive_threads != null)
             {
-                foreach(Thread receive_thread in receive_threads){
+                foreach (Thread receive_thread in receive_threads)
+                {
                     receive_thread.Abort();
                 }
             }
-            
+
+            if (this.listen_socket != null)
+            {
+
+                try
+                {
+                    listen_socket.Shutdown(SocketShutdown.Both);
+                    listen_socket.Close();
+
+                }
+                catch
+                {
+                }
+
+
+            }
 
             this.Close();
         }

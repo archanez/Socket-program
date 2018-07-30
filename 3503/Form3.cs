@@ -94,7 +94,7 @@ namespace _3503
 
         private void btn_close_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("종료");
+          //  MessageBox.Show("종료");
             if(listen_thread!=null){
                 listen_thread.Abort();
                 client_socket.Shutdown(SocketShutdown.Both);

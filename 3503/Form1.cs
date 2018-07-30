@@ -29,5 +29,16 @@ namespace _3503
             Form3 clientForm = new Form3();
             clientForm.Show();
         }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+              Application.Exit();
+
+        }
     }
 }
