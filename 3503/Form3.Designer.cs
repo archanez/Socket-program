@@ -28,66 +28,71 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.button3 = new System.Windows.Forms.Button();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.listBox1 = new System.Windows.Forms.ListBox();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.btn_send = new System.Windows.Forms.Button();
+            this.tb_msg = new System.Windows.Forms.TextBox();
+            this.chattingList = new System.Windows.Forms.ListBox();
+            this.btn_close = new System.Windows.Forms.Button();
+            this.btn_connect = new System.Windows.Forms.Button();
+            this.tb_port = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.tb_ip = new System.Windows.Forms.TextBox();
+            this.tb_name = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // button3
+            // btn_send
             // 
-            this.button3.Location = new System.Drawing.Point(362, 336);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 17;
-            this.button3.Text = "보내기";
-            this.button3.UseVisualStyleBackColor = true;
+            this.btn_send.Location = new System.Drawing.Point(362, 336);
+            this.btn_send.Name = "btn_send";
+            this.btn_send.Size = new System.Drawing.Size(75, 23);
+            this.btn_send.TabIndex = 17;
+            this.btn_send.Text = "보내기";
+            this.btn_send.UseVisualStyleBackColor = true;
+            this.btn_send.Click += new System.EventHandler(this.btn_send_Click);
             // 
-            // textBox3
+            // tb_msg
             // 
-            this.textBox3.Location = new System.Drawing.Point(40, 338);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(316, 21);
-            this.textBox3.TabIndex = 16;
+            this.tb_msg.Location = new System.Drawing.Point(40, 338);
+            this.tb_msg.Name = "tb_msg";
+            this.tb_msg.Size = new System.Drawing.Size(316, 21);
+            this.tb_msg.TabIndex = 16;
             // 
-            // listBox1
+            // chattingList
             // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 12;
-            this.listBox1.Location = new System.Drawing.Point(40, 91);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(397, 232);
-            this.listBox1.TabIndex = 15;
+            this.chattingList.FormattingEnabled = true;
+            this.chattingList.ItemHeight = 12;
+            this.chattingList.Location = new System.Drawing.Point(40, 127);
+            this.chattingList.Name = "chattingList";
+            this.chattingList.Size = new System.Drawing.Size(397, 196);
+            this.chattingList.TabIndex = 15;
             // 
-            // button2
+            // btn_close
             // 
-            this.button2.Location = new System.Drawing.Point(377, 15);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(60, 56);
-            this.button2.TabIndex = 14;
-            this.button2.Text = "종료";
-            this.button2.UseVisualStyleBackColor = true;
+            this.btn_close.Location = new System.Drawing.Point(377, 15);
+            this.btn_close.Name = "btn_close";
+            this.btn_close.Size = new System.Drawing.Size(60, 56);
+            this.btn_close.TabIndex = 14;
+            this.btn_close.Text = "종료";
+            this.btn_close.UseVisualStyleBackColor = true;
+            this.btn_close.Click += new System.EventHandler(this.btn_close_Click);
             // 
-            // button1
+            // btn_connect
             // 
-            this.button1.Location = new System.Drawing.Point(301, 15);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(60, 56);
-            this.button1.TabIndex = 13;
-            this.button1.Text = "connect";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btn_connect.Location = new System.Drawing.Point(301, 15);
+            this.btn_connect.Name = "btn_connect";
+            this.btn_connect.Size = new System.Drawing.Size(60, 56);
+            this.btn_connect.TabIndex = 13;
+            this.btn_connect.Text = "connect";
+            this.btn_connect.UseVisualStyleBackColor = true;
+            this.btn_connect.Click += new System.EventHandler(this.btn_connect_Click);
             // 
-            // textBox2
+            // tb_port
             // 
-            this.textBox2.Location = new System.Drawing.Point(148, 50);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(133, 21);
-            this.textBox2.TabIndex = 12;
+            this.tb_port.Location = new System.Drawing.Point(148, 50);
+            this.tb_port.Name = "tb_port";
+            this.tb_port.Size = new System.Drawing.Size(133, 21);
+            this.tb_port.TabIndex = 12;
             // 
             // label2
             // 
@@ -109,29 +114,51 @@
             this.label1.TabIndex = 10;
             this.label1.Text = "my IP";
             // 
-            // textBox1
+            // tb_ip
             // 
-            this.textBox1.Location = new System.Drawing.Point(148, 15);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(133, 21);
-            this.textBox1.TabIndex = 9;
+            this.tb_ip.Location = new System.Drawing.Point(148, 15);
+            this.tb_ip.Name = "tb_ip";
+            this.tb_ip.Size = new System.Drawing.Size(133, 21);
+            this.tb_ip.TabIndex = 9;
+            this.tb_ip.TextChanged += new System.EventHandler(this.tb_ip_TextChanged);
+            // 
+            // tb_name
+            // 
+            this.tb_name.Location = new System.Drawing.Point(196, 91);
+            this.tb_name.Name = "tb_name";
+            this.tb_name.Size = new System.Drawing.Size(165, 21);
+            this.tb_name.TabIndex = 18;
+            this.tb_name.TextChanged += new System.EventHandler(this.tb_name_TextChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("굴림", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.label3.Location = new System.Drawing.Point(33, 96);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(142, 16);
+            this.label3.TabIndex = 19;
+            this.label3.Text = "내 이름 (수정가능)";
             // 
             // Form3
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(474, 375);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.textBox3);
-            this.Controls.Add(this.listBox1);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.tb_name);
+            this.Controls.Add(this.btn_send);
+            this.Controls.Add(this.tb_msg);
+            this.Controls.Add(this.chattingList);
+            this.Controls.Add(this.btn_close);
+            this.Controls.Add(this.btn_connect);
+            this.Controls.Add(this.tb_port);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.tb_ip);
             this.Name = "Form3";
             this.Text = "client";
+            this.Load += new System.EventHandler(this.Form3_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -139,14 +166,16 @@
 
         #endregion
 
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.ListBox listBox1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Button btn_send;
+        private System.Windows.Forms.TextBox tb_msg;
+        private System.Windows.Forms.ListBox chattingList;
+        private System.Windows.Forms.Button btn_close;
+        private System.Windows.Forms.Button btn_connect;
+        private System.Windows.Forms.TextBox tb_port;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox tb_ip;
+        private System.Windows.Forms.TextBox tb_name;
+        private System.Windows.Forms.Label label3;
     }
 }
