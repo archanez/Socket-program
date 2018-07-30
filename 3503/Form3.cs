@@ -58,6 +58,8 @@ namespace _3503
                 return;
             client_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             client_socket.Connect(new IPEndPoint(IPAddress.Parse(tb_ip.Text), int.Parse(tb_port.Text)));
+            tb_ip_my.Text = Client_IP;
+            tb_name.Text = Client_IP;
             //chattingList.Items.Add(String.Format("소켓 연결이 되었습니다 {0}", client_socket.RemoteEndPoint.ToString()));
             chattingList.Items.Add("[채팅방에 참여하였습니다.]");
             isConnected = true;
@@ -95,7 +97,7 @@ namespace _3503
 
             if(listen_thread!=null){
                 listen_thread.Abort();
-                client_socket.Close();
+                client_socket.Shutdown(SocketShutdown.Both);
 
             }
 
@@ -108,9 +110,31 @@ namespace _3503
 
         private void tb_ip_TextChanged(object sender, EventArgs e)
         {
-            tb_name.Text = tb_ip.Text;
 
         }
 
+        private void tb_msg_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+        public static string Client_IP
+        {
+            get
+            {
+                IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
+                string ClientIP = string.Empty;
+                for (int i = 0; i < host.AddressList.Length; i++)
+                {
+                    if (host.AddressList[i].AddressFamily == AddressFamily.InterNetwork)
+                    {
+                        ClientIP = host.AddressList[i].ToString();
+                    }
+                }
+                return ClientIP;
+            }
+
     }
+
+    
+}
 }

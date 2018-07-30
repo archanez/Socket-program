@@ -130,7 +130,12 @@ namespace _3503
                 //클라이언트가 접속하지 않으면 서버는 이곳에서 디버깅이 멈춰져 있습니다. 클라이언트가 접속할 시에
                 //아래 문단부터 다시 돌아가게 되지요 ㅎㅎ
                 connectedClients.Add(client_socket);
-                string client_address = client_socket.RemoteEndPoint.ToString();
+
+                string client_address = client_socket.LocalEndPoint.ToString();
+
+                //IPEndPoint ip = (IPEndPoint)client_socket.LocalEndPoint;
+                //string client_address = ip.Address.ToString();
+
 
                 SendMessage(client_address + "님이 참여하셨습니다.");
 
@@ -182,8 +187,8 @@ namespace _3503
              if (listen_thread != null)
             {
                 listen_thread.Abort();
-                listen_socket.Close();
-                client_socket.Close();
+                listen_socket.Shutdown(SocketShutdown.Both);
+                client_socket.Shutdown(SocketShutdown.Both);
 
             }
            

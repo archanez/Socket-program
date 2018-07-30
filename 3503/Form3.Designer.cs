@@ -39,11 +39,13 @@
             this.tb_ip = new System.Windows.Forms.TextBox();
             this.tb_name = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.tb_ip_my = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // btn_send
             // 
-            this.btn_send.Location = new System.Drawing.Point(362, 336);
+            this.btn_send.Location = new System.Drawing.Point(362, 403);
             this.btn_send.Name = "btn_send";
             this.btn_send.Size = new System.Drawing.Size(75, 23);
             this.btn_send.TabIndex = 17;
@@ -53,18 +55,19 @@
             // 
             // tb_msg
             // 
-            this.tb_msg.Location = new System.Drawing.Point(40, 338);
+            this.tb_msg.Location = new System.Drawing.Point(40, 405);
             this.tb_msg.Name = "tb_msg";
             this.tb_msg.Size = new System.Drawing.Size(316, 21);
             this.tb_msg.TabIndex = 16;
+            this.tb_msg.TextChanged += new System.EventHandler(this.tb_msg_TextChanged);
             // 
             // chattingList
             // 
             this.chattingList.FormattingEnabled = true;
             this.chattingList.ItemHeight = 12;
-            this.chattingList.Location = new System.Drawing.Point(40, 127);
+            this.chattingList.Location = new System.Drawing.Point(40, 160);
             this.chattingList.Name = "chattingList";
-            this.chattingList.Size = new System.Drawing.Size(397, 196);
+            this.chattingList.Size = new System.Drawing.Size(397, 232);
             this.chattingList.TabIndex = 15;
             // 
             // btn_close
@@ -100,9 +103,9 @@
             this.label2.Font = new System.Drawing.Font("굴림", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.label2.Location = new System.Drawing.Point(37, 50);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(64, 16);
+            this.label2.Size = new System.Drawing.Size(75, 16);
             this.label2.TabIndex = 11;
-            this.label2.Text = "my Port";
+            this.label2.Text = "접속 Port";
             // 
             // label1
             // 
@@ -110,9 +113,9 @@
             this.label1.Font = new System.Drawing.Font("굴림", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.label1.Location = new System.Drawing.Point(37, 15);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(47, 16);
+            this.label1.Size = new System.Drawing.Size(58, 16);
             this.label1.TabIndex = 10;
-            this.label1.Text = "my IP";
+            this.label1.Text = "접속 IP";
             // 
             // tb_ip
             // 
@@ -124,9 +127,9 @@
             // 
             // tb_name
             // 
-            this.tb_name.Location = new System.Drawing.Point(196, 91);
+            this.tb_name.Location = new System.Drawing.Point(196, 123);
             this.tb_name.Name = "tb_name";
-            this.tb_name.Size = new System.Drawing.Size(165, 21);
+            this.tb_name.Size = new System.Drawing.Size(241, 21);
             this.tb_name.TabIndex = 18;
             this.tb_name.TextChanged += new System.EventHandler(this.tb_name_TextChanged);
             // 
@@ -134,17 +137,37 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("굴림", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.label3.Location = new System.Drawing.Point(33, 96);
+            this.label3.Location = new System.Drawing.Point(37, 128);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(142, 16);
             this.label3.TabIndex = 19;
             this.label3.Text = "내 이름 (수정가능)";
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("굴림", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.label4.Location = new System.Drawing.Point(37, 103);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(42, 16);
+            this.label4.TabIndex = 20;
+            this.label4.Text = "내 IP";
+            // 
+            // tb_ip_my
+            // 
+            this.tb_ip_my.Enabled = false;
+            this.tb_ip_my.Location = new System.Drawing.Point(196, 93);
+            this.tb_ip_my.Name = "tb_ip_my";
+            this.tb_ip_my.Size = new System.Drawing.Size(241, 21);
+            this.tb_ip_my.TabIndex = 21;
+            // 
             // Form3
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(474, 375);
+            this.ClientSize = new System.Drawing.Size(474, 438);
+            this.Controls.Add(this.tb_ip_my);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.tb_name);
             this.Controls.Add(this.btn_send);
@@ -177,5 +200,7 @@
         private System.Windows.Forms.TextBox tb_ip;
         private System.Windows.Forms.TextBox tb_name;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox tb_ip_my;
     }
 }
