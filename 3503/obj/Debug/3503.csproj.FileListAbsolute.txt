@@ -1,0 +1,8 @@
+G:\수행\정보보호\3503\3503\bin\Debug\3503.exe.config
+G:\수행\정보보호\3503\3503\bin\Debug\3503.exe
+G:\수행\정보보호\3503\3503\bin\Debug\3503.pdb
+G:\수행\정보보호\3503\3503\obj\Debug\_3503.Form1.resources
+G:\수행\정보보호\3503\3503\obj\Debug\_3503.Properties.Resources.resources
+G:\수행\정보보호\3503\3503\obj\Debug\3503.csproj.GenerateResource.Cache
+G:\수행\정보보호\3503\3503\obj\Debug\3503.exe
+G:\수행\정보보호\3503\3503\obj\Debug\3503.pdb
