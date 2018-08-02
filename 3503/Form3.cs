@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Net;   //아래 3개 역시 마찬가지.
+using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Text.RegularExpressions;
@@ -36,16 +36,15 @@ namespace _3503
 
         private void Form3_Load(object sender, EventArgs e)
         {
-            
+
         }
 
         private void btn_send_Click(object sender, EventArgs e)
         {
-            //send 부분입니다. 보내기 버튼을 눌렀을 때 글자 데이터를 보내는 역할입니다. 
-            //연결이 안되어있을때는 그냥 return으로 보내졌을 때는 Clear함수와 함께 채팅창을 다시 원위치시키는것으로 마무리.
+
             if (isConnected == false)
                 return;
-            
+
             SendMessage(user_name + " : " + tb_msg.Text);
             tb_msg.Clear();
             tb_msg.Text = "";
@@ -53,41 +52,55 @@ namespace _3503
 
         private void btn_connect_Click(object sender, EventArgs e)
         {
-            //접속 버튼을 눌렀을 때 발생하는 것입니다.
-            //여기서 말하는 textBox2는 IP주소가 입력되는 TextBox이니 박스의 이름에 주의하세요.
+
             if (isConnected == true)
+            {
+                MessageBox.Show("이미 채팅방에 참여하고있습니다.");
                 return;
+            }
             if (CheckIP(tb_ip.Text) && CheckPort(tb_port.Text))
             {
+                try
+                {
+                    client_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);//소켓을 만들어서
+                    client_socket.Connect(new IPEndPoint(IPAddress.Parse(tb_ip.Text), int.Parse(tb_port.Text)));//연결하기
+                    tb_ip_my.Text = client_socket.LocalEndPoint.ToString();
+                    user_name = tb_ip_my.Text;
+                    tb_name.Text = user_name;
 
-                client_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                client_socket.Connect(new IPEndPoint(IPAddress.Parse(tb_ip.Text), int.Parse(tb_port.Text)));
-                tb_ip_my.Text = client_socket.LocalEndPoint.ToString();
-                user_name = tb_ip_my.Text;
-                tb_name.Text = user_name;
-                //chattingList.Items.Add(String.Format("소켓 연결이 되었습니다 {0}", client_socket.RemoteEndPoint.ToString()));
+                    chattingList.Items.Add("[-- 채팅방에 참여하였습니다. --]");
 
-                chattingList.Items.Add("[-- 채팅방에 참여하였습니다. --]");
-
-                SendMessage("[-- '" + user_name + "' 님이 참여하셨습니다. --]");
+                    SendMessage("[-- '" + user_name + "' 님이 참여하셨습니다. --]");
 
 
-                isConnected = true;
-                //아래 두개는 do_receive 함수를 위한 쓰레드입니다.
-                //쓰레드가 있어야만 연결된다고 해야할까요.
-                listen_thread = new Thread(do_receive);
-                listen_thread.Start();
+                    isConnected = true;
+
+
+                    listen_thread = new Thread(do_receive);
+                    listen_thread.Start();
+                }
+                catch
+                {
+                    MessageBox.Show("연결에 실패하였습니다.");
+                }
             }
         }
 
         private void SendMessage(string message)
         {
-           
-            byte[] msg = Encoding.UTF8.GetBytes(message+" <eof>");
-            int bytesSent = client_socket.Send(msg);
+            try
+            {
+                byte[] msg = Encoding.UTF8.GetBytes(message + " <eof>");
+                int bytesSent = client_socket.Send(msg);
+            }
+            catch
+            {
+                if (message.IndexOf("q[--") != 0)
+                    MessageBox.Show("채팅을 보낼 수 없습니다.");
+            }
         }
 
-        private bool CheckIP(string ip)
+        private bool CheckIP(string ip)//ip 검사
         {
             if (ip.Replace(" ", "") == "" || ip == null)
             {
@@ -112,7 +125,7 @@ namespace _3503
 
         }
 
-        private bool CheckPort(string port)
+        private bool CheckPort(string port)//port검사
         {
             if (port.Replace(" ", "") == "" || port == null)
             {
@@ -146,11 +159,31 @@ namespace _3503
             {
                 while (true)
                 {
-                    byte[] bytes = new byte[1024];
-                    int bytesRec = client_socket.Receive(bytes);
-                    data += Encoding.UTF8.GetString(bytes, 0, bytesRec);
-                    if (data.IndexOf("<eof>") > -1)
-                        break;
+                    try
+                    {
+                        byte[] bytes = new byte[1024];
+                        int bytesRec = client_socket.Receive(bytes);
+                        data += Encoding.UTF8.GetString(bytes, 0, bytesRec);
+                        if (data.IndexOf("<eof>") > -1)
+                            break;
+
+                    }
+                    catch
+                    {
+                        isConnected = false;
+
+                        try
+                        {
+                            this.Close();
+
+                        }
+                        catch
+                        {
+                        }
+
+
+                        return;
+                    }
                 }
                 data = data.Substring(0, data.Length - 5);
                 Invoke((MethodInvoker)delegate
@@ -165,16 +198,15 @@ namespace _3503
         private void btn_close_Click(object sender, EventArgs e)
         {
 
-            SendMessage("[-- '"+user_name+"'님이 퇴장하셨습니다. --]");
+            SendMessage("q[-- '" + user_name + "'님이 퇴장하셨습니다. --]");
 
             try
             {
-                //  MessageBox.Show("종료");
                 if (listen_thread != null)
                 {
                     listen_thread.Abort();
                     client_socket.Shutdown(SocketShutdown.Both);
-
+                    client_socket.Close();
                 }
             }
             catch { }
@@ -200,6 +232,11 @@ namespace _3503
 
         private void btn_change_Click(object sender, EventArgs e)
         {
+            if (!isConnected)
+            {
+                MessageBox.Show("채팅방에 연결되어있지않습니다.");
+                return;
+            }
             string name = tb_name.Text;
             if (tb_name.Text.Replace(" ", "").Equals(""))
             {
@@ -208,13 +245,13 @@ namespace _3503
             }
             else
             {
-                SendMessage("[" + user_name + "]님이 [" + tb_name.Text + "] 로 이름을 변경하였습니다.");
+                SendMessage("[-- '" + user_name + "'님이 '" + tb_name.Text + "' (으)로 이름을 변경하였습니다. --]");
                 user_name = tb_name.Text;
 
             }
         }
-       
 
-    
-}
+
+
+    }
 }

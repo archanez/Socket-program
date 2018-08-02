@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Net;       ////이 이하 3가지는 네트워크 소켓 쓰레딩을 하기 위해서 선언해줍니다.
+using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Text.RegularExpressions;
@@ -34,7 +34,7 @@ namespace _3503
         public Form2()
         {
             InitializeComponent();
-            isConnected = false;   //초기화부문
+            isConnected = false;
 
         }
 
@@ -50,14 +50,14 @@ namespace _3503
 
             if (CheckIP(tb_ip.Text) && CheckPort(tb_port.Text))
             {
-                start(tb_ip.Text, int.Parse(tb_port.Text), 10);   //버튼1 을 눌렀을 때 실행될 것 127.0.0.1 은 Local입니다
+                start(tb_ip.Text, int.Parse(tb_port.Text), 10);
 
             }
 
         }
 
 
-        private bool CheckIP(string ip)
+        private bool CheckIP(string ip)//ip 검사
         {
             if (ip.Replace(" ", "") == "" || ip == null)
             {
@@ -82,7 +82,7 @@ namespace _3503
 
         }
 
-        private bool CheckPort(string port)
+        private bool CheckPort(string port)//port 검사
         {
             if (port.Replace(" ", "") == "" || port == null)
             {
@@ -115,8 +115,8 @@ namespace _3503
             if (isConnected == false)
                 return;
 
-            
-            //int bytesSent = client_socket.Send(msg);
+
+
             SendMessage(user_name + " : " + tb_msg.Text);
 
 
@@ -128,14 +128,9 @@ namespace _3503
         void SendMessage(string data)
         {
 
-            try
-            {
-                chattingList.Items.Add(data);
-            }
-            catch
-            {
 
-            }
+            chattingList.Items.Add(data);
+
             // for을 통해 "역순"으로 클라이언트에게 데이터를 보낸다.
             for (int i = connectedClients.Count - 1; i >= 0; i--)
             {
@@ -149,6 +144,7 @@ namespace _3503
                     }
                     catch
                     {
+                        //MessageBox.Show("에러");
                         // 오류 발생하면 전송 취소하고 리스트에서 삭제한다.
                         try { socket.Dispose(); }
                         catch { }
@@ -186,29 +182,23 @@ namespace _3503
                 listen_thread.Start();
 
             }
-            catch (Exception e)
+            catch
             {
-                MessageBox.Show("에러가 발생하였습니다. : " + e.ToString());
+                MessageBox.Show("에러가 발생하였습니다.\n port를 변경하거나 프로그램을 재시작하면 해결됩니다.");
             }
-            //c++하셨다면 try / catch 구문이야 잘 아시겠죠 전 잘모름.
+
         }
 
-        void WaitSocket()
+        void WaitSocket()//클라이언트를 기다리는 함수를 쓰레드로. 비동기
         {
             while (true)
             {
                 Socket client_socket = listen_socket.Accept();
-                //클라이언트가 접속하지 않으면 서버는 이곳에서 디버깅이 멈춰져 있습니다. 클라이언트가 접속할 시에
-                //아래 문단부터 다시 돌아가게 되지요 ㅎㅎ
+
                 connectedClients.Add(client_socket);
 
                 string client_address = client_socket.RemoteEndPoint.ToString();
 
-                //IPEndPoint ip = (IPEndPoint)client_socket.LocalEndPoint;
-                //string client_address = ip.Address.ToString();
-
-
-                //SendMessage("[" + client_address + "] 님이 참여하셨습니다.");
 
                 isConnected = true;
                 Thread receive_thread = new Thread(delegate()
@@ -217,70 +207,100 @@ namespace _3503
                 });
                 receive_threads.Add(receive_thread);
 
-                //이 줄과 밑에 줄은 쓰레드입니다. 즉
-                //글자를 받는 것이라고 보시면 되겠습니다. 클라이언트로부터.
+                //문자받는 쓰레드 시작
                 receive_thread.Start();
             }
 
         }
 
 
-        void do_receive(Socket client_socket)//do receive 함수입니다. 이 함수가 채팅서버의 결정적인 함수입니다.
+        void do_receive(Socket client_socket)
         {
             while (isConnected)
             {
-
-                // string client_address = client_socket.RemoteEndPoint.ToString();
-                //string client_address = "";
                 while (true)
                 {
-                    byte[] bytes = new byte[1024];  //바이트 배열 선언
-                    int bytesRec = client_socket.Receive(bytes);
+                    try
+                    {
+                        byte[] bytes = new byte[1024];
+                        int bytesRec = client_socket.Receive(bytes);
 
 
-                    data += Encoding.UTF8.GetString(bytes, 0, bytesRec);  //인코딩과 GetString
-                    if (data.IndexOf("<eof>") > -1)  //Index Of  의 그것입니다 숫자 0 아닙니다.
-                        break;
+                        data += Encoding.UTF8.GetString(bytes, 0, bytesRec);
+                        if (data.IndexOf("<eof>") > -1)
+                            break;
+                    }
+                    catch
+                    {
+                        
+                    }
+                    if (data.IndexOf("q[--") == 0)
+                    {
+
+
+                        int index = connectedClients.IndexOf(client_socket);
+                        connectedClients.RemoveAt(index);
+                        receive_threads.RemoveAt(index);
+                        client_socket.Dispose();
+                    }
                 }
+                data = data.Replace("q[--", "[--");
                 data = data.Substring(0, data.Length - 5);
-                Invoke((MethodInvoker)delegate
+                try
                 {
-                    //chattingList.Items.Add(data);  //이 부문은 listBox로 우리가 위에서 만든UI에 클라이언트로부터
-                    //받아온 글자 데이터를 뿌려주는 역할을 합니다.
-                    // for을 통해 "역순"으로 클라이언트에게 데이터를 보낸다.
-                    SendMessage(data);
+                    Invoke((MethodInvoker)delegate
+                    {
+
+                        SendMessage(data);
+                    }
+                    );
                 }
-                );
-                data = "";  //한 번 채팅을 치고 보내기를 누르면 그 글자는 사라져야겠죠? 그 부분입니다.
+                catch
+                {
+                    MessageBox.Show("채팅을 시작할 수 없습니다.");
+                }
+
+                data = "";
             }
         }
 
-        private void btn_close_Click(object sender, EventArgs e)
+        private void btn_close_Click(object sender, EventArgs e)//종료함수
         {
-            if (receive_threads != null)
+            try
             {
-                foreach (Thread receive_thread in receive_threads)
+
+                SendMessage("[-- 채팅이 종료되었습니다. --]");
+
+                for (int i = connectedClients.Count - 1; i >= 0; i--)
                 {
-                    receive_thread.Abort();
+                    Socket socket = connectedClients[i];
+                    
+                            try { socket.Dispose(); }
+                            catch { }
+                            connectedClients.RemoveAt(i);
+                            receive_threads.RemoveAt(i);
+                        
                 }
-            }
 
-            if (this.listen_socket != null)
-            {
-
-                try
+                if (receive_threads != null)
                 {
+                    foreach (Thread receive_thread in receive_threads)
+                    {
+                        receive_thread.Abort();
+                    }
+                }
+
+                if (this.listen_socket != null)
+                {
+
                     listen_socket.Shutdown(SocketShutdown.Both);
                     listen_socket.Close();
 
                 }
-                catch
-                {
-                }
-
-
             }
-
+            catch
+            {
+            }
             this.Close();
         }
 
@@ -294,7 +314,7 @@ namespace _3503
         }
 
 
-        public static string Client_IP
+        public static string Client_IP//내 ip가져오기
         {
             get
             {
@@ -324,7 +344,7 @@ namespace _3503
             }
             else
             {
-                SendMessage("[-- '" + user_name + "'님이 '" + tb_name.Text+"' 로 이름을 변경하였습니다. --]");
+                SendMessage("[-- '" + user_name + "'님이 '" + tb_name.Text + "' (으)로 이름을 변경하였습니다. --]");
                 user_name = tb_name.Text;
 
             }

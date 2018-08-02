@@ -40,5 +40,10 @@ namespace _3503
               Application.Exit();
 
         }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
