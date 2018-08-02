@@ -41,6 +41,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.tb_ip_my = new System.Windows.Forms.TextBox();
+            this.btn_change = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btn_send
@@ -129,7 +130,7 @@
             // 
             this.tb_name.Location = new System.Drawing.Point(196, 123);
             this.tb_name.Name = "tb_name";
-            this.tb_name.Size = new System.Drawing.Size(241, 21);
+            this.tb_name.Size = new System.Drawing.Size(180, 21);
             this.tb_name.TabIndex = 18;
             this.tb_name.TextChanged += new System.EventHandler(this.tb_name_TextChanged);
             // 
@@ -161,11 +162,22 @@
             this.tb_ip_my.Size = new System.Drawing.Size(241, 21);
             this.tb_ip_my.TabIndex = 21;
             // 
+            // btn_change
+            // 
+            this.btn_change.Location = new System.Drawing.Point(382, 121);
+            this.btn_change.Name = "btn_change";
+            this.btn_change.Size = new System.Drawing.Size(55, 23);
+            this.btn_change.TabIndex = 22;
+            this.btn_change.Text = "변경";
+            this.btn_change.UseVisualStyleBackColor = true;
+            this.btn_change.Click += new System.EventHandler(this.btn_change_Click);
+            // 
             // Form3
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(474, 438);
+            this.Controls.Add(this.btn_change);
             this.Controls.Add(this.tb_ip_my);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -202,5 +214,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox tb_ip_my;
+        private System.Windows.Forms.Button btn_change;
     }
 }

@@ -39,6 +39,7 @@
             this.btn_send = new System.Windows.Forms.Button();
             this.tb_name = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.btn_change = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // tb_ip
@@ -140,11 +141,22 @@
             this.label3.TabIndex = 10;
             this.label3.Text = "내 이름 (수정가능)";
             // 
+            // btn_change
+            // 
+            this.btn_change.Location = new System.Drawing.Point(360, 106);
+            this.btn_change.Name = "btn_change";
+            this.btn_change.Size = new System.Drawing.Size(60, 23);
+            this.btn_change.TabIndex = 23;
+            this.btn_change.Text = "변경";
+            this.btn_change.UseVisualStyleBackColor = true;
+            this.btn_change.Click += new System.EventHandler(this.btn_change_Click);
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(444, 385);
+            this.Controls.Add(this.btn_change);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.tb_name);
             this.Controls.Add(this.btn_send);
@@ -177,5 +189,6 @@
         private System.Windows.Forms.Button btn_send;
         private System.Windows.Forms.TextBox tb_name;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button btn_change;
     }
 }

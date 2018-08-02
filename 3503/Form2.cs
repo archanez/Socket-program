@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using System.Net;       ////이 이하 3가지는 네트워크 소켓 쓰레딩을 하기 위해서 선언해줍니다.
 using System.Net.Sockets;
 using System.Threading;
-
+using System.Text.RegularExpressions;
 
 namespace _3503
 {
@@ -28,6 +28,9 @@ namespace _3503
 
         //Thread receive_thread;
         Thread listen_thread;
+
+        string user_name;
+
         public Form2()
         {
             InitializeComponent();
@@ -37,16 +40,74 @@ namespace _3503
 
         private void Form2_Load(object sender, EventArgs e)
         {
-            tb_ip.Text = Client_IP;
+            user_name = Client_IP;
+            tb_ip.Text = user_name;
 
         }
 
         private void btn_Listen_Click(object sender, EventArgs e)
         {
 
-            //TODO: 예외처리하기 (ip,port범위 , port 숫자만)
-            start(tb_ip.Text, int.Parse(tb_port.Text), 10);   //버튼1 을 눌렀을 때 실행될 것 127.0.0.1 은 Local입니다
-            //여러분도 위와 같은 것으로 해보세요 연습할때는 ㅎㅎ
+            if (CheckIP(tb_ip.Text) && CheckPort(tb_port.Text))
+            {
+                start(tb_ip.Text, int.Parse(tb_port.Text), 10);   //버튼1 을 눌렀을 때 실행될 것 127.0.0.1 은 Local입니다
+
+            }
+
+        }
+
+
+        private bool CheckIP(string ip)
+        {
+            if (ip.Replace(" ", "") == "" || ip == null)
+            {
+                MessageBox.Show("IP를 입력해주세요.");
+                return false;
+            }
+            string ValidIpAddressRegex = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9‌​]{2}|2[0-4][0-9]|25[0-5])$";    // IP validation 
+
+            Regex r = new Regex(ValidIpAddressRegex, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            Match m = r.Match(ip);
+
+            if (!m.Success)
+            {
+                MessageBox.Show("유효한 IP를 입력해주세요.");
+            }
+
+
+            return m.Success;
+
+
+
+
+        }
+
+        private bool CheckPort(string port)
+        {
+            if (port.Replace(" ", "") == "" || port == null)
+            {
+                MessageBox.Show("port를 입력해주세요.");
+                return false;
+            }
+            int port_num;
+
+            try
+            {
+                port_num = int.Parse(port);
+            }
+            catch
+            {
+                port_num = -1;
+            }
+
+            if (port_num < 0 || port_num > 65535)
+            {
+                MessageBox.Show("유효한 port를 입력해주세요.");
+                return false;
+
+            }
+            return true;
+
         }
 
         private void btn_send_Click(object sender, EventArgs e)
@@ -54,13 +115,9 @@ namespace _3503
             if (isConnected == false)
                 return;
 
-            string name = tb_name.Text;
-            if (tb_name.Text.Replace(" ", "").Equals(""))
-            {
-                name = tb_ip.Text;
-            }
+            
             //int bytesSent = client_socket.Send(msg);
-            SendMessage(name + " : " + tb_msg.Text);
+            SendMessage(user_name + " : " + tb_msg.Text);
 
 
 
@@ -105,7 +162,7 @@ namespace _3503
         public void start(string host, int port, int backlog)
         {
 
-            chattingList.Items.Add("참여자를 기다리는 중입니다.");
+            chattingList.Items.Add("[-- 참여자를 기다리는 중입니다. --]");
 
 
             this.listen_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -151,7 +208,7 @@ namespace _3503
                 //string client_address = ip.Address.ToString();
 
 
-                SendMessage("[" + client_address + "] 님이 참여하셨습니다.");
+                //SendMessage("[" + client_address + "] 님이 참여하셨습니다.");
 
                 isConnected = true;
                 Thread receive_thread = new Thread(delegate()
@@ -255,6 +312,22 @@ namespace _3503
                 return ClientIP;
             }
 
+        }
+
+        private void btn_change_Click(object sender, EventArgs e)
+        {
+            string name = tb_name.Text;
+            if (tb_name.Text.Replace(" ", "").Equals(""))
+            {
+                MessageBox.Show("이름을 입력해주세요.");
+                tb_name.Text = user_name;
+            }
+            else
+            {
+                SendMessage("[-- '" + user_name + "'님이 '" + tb_name.Text+"' 로 이름을 변경하였습니다. --]");
+                user_name = tb_name.Text;
+
+            }
         }
     }
 }
